@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mast Form Website</title>
+  <style>
+    body {
+      background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .form-container {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      width: 350px;
+      position: relative;
+    }
+
+    .form-container h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 15px;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      font-size: 16px;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      background: #007BFF;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    /* Pop-up animation */
+    .popup {
+      position: fixed;
+      width: 250px;
+      height: 250px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: white;
+      border-radius: 20px;
+      z-index: 1000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: green;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      animation: popupAnim 1s forwards;
+    }
+
+    .popup.hidden {
+      display: none;
+    }
+
+    @keyframes popupAnim {
+      0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+      }
+      25% {
+        transform: translate(-50%, -50%) scale(0.3);
+        opacity: 0.4;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(0.6);
+        opacity: 0.7;
+      }
+      75% {
+        transform: translate(-50%, -50%) scale(0.9);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>Register Now</h2>
+    <input type="text" id="name" placeholder="Your Name" required>
+    <input type="tel" id="mobile" placeholder="Mobile Number" required>
+    <input type="email" id="email" placeholder="Email ID" required>
+    <textarea id="message" placeholder="Your Message (Optional)"></textarea>
+    <button onclick="submitForm()">Submit</button>
+  </div>
+
+  <div class="popup hidden" id="popup">
+    ✅ Thank You ☺️
+  </div>
+
+  <script>
+    async function submitForm() {
+      const name = document.getElementById('name').value;
+      const mobile = document.getElementById('mobile').value;
+      const email = document.getElementById('email').value;
+      const message = document.getElementById('message').value;
+
+      const text = `📝 *New Form Submission*:\n\n👤 Name: ${name}\n📱 Mobile: ${mobile}\n📧 Email: ${email}\n💬 Message: ${message}`;
+      const token = '7641600096:AAF2KShllYD6MKx2rZ_aIOwqDdF4hi1rJTc';
+      const chatId = '6861912709';
+
+      await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          chat_id: chatId,
+          text: text,
+          parse_mode: "Markdown"
+        })
+      });
+
+      // Show the popup
+      const popup = document.getElementById('popup');
+      popup.classList.remove('hidden');
+
+      // Auto-close popup after 3 sec
+      setTimeout(() => {
+        popup.classList.add('hidden');
+        document.getElementById('name').value = '';
+        document.getElementById('mobile').value = '';
+        document.getElementById('email').value = '';
+        document.getElementById('message').value = '';
+      }, 3000);
+    }
+  </script>
+
+</body>
+</html>
